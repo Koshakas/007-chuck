@@ -18,7 +18,19 @@ class Jokes extends React.Component {
     }
 
     render() {
-        if (this.state.jokes.length) {
+        if (localStorage.length) {
+            return (
+                <div className="jokes">
+                    {this.state.jokes.map(j =>
+                        JSON.parse(localStorage.getItem("favoriteJokes")).find(c => c.id === j.id) ? (
+                            <Joke id={j.id} joke={j.joke} status="saved" />
+                        ) : (
+                            <Joke id={j.id} joke={j.joke} status="notSaved" />
+                        )
+                    )}
+                </div>
+            );
+        } else if (this.state.jokes.length) {
             return (
                 <div className="jokes">
                     {this.state.jokes.map(j => (
