@@ -1,22 +1,34 @@
 import React from "react";
-// import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 let favoritesList = [];
 
 class Joke extends React.Component {
     constructor(props) {
         super(props);
-        this.handleAddFavorites = this.handleAddFavorites.bind(this);
+        this.handleAddFavorite = this.handleAddFavorite.bind(this);
+        this.handleRemoveFavorite = this.handleRemoveFavorite.bind(this);
+        this.state = {
+            status: props.status
+        };
     }
 
-    handleAddFavorites() {
+    handleAddFavorite() {
         let obj = {};
         obj.id = this.props.id;
         obj.joke = this.props.joke;
         obj.category = [];
         favoritesList.push(obj);
         localStorage.setItem("favoriteJokes", JSON.stringify(favoritesList));
+        this.setState({ status: "saved" });
+    }
+
+    handleRemoveFavorite() {
+        favoritesList = JSON.parse(localStorage.getItem("favoriteJokes"));
+        const newList = favoritesList.filter(joke => joke.id !== this.props.id);
+        localStorage.setItem("favoriteJokes", JSON.stringify(newList));
+        this.setState({ status: "notSaved" });
+        if (window.location.pathname === "/favorites") window.location.reload();
     }
 
     render() {
@@ -25,12 +37,15 @@ class Joke extends React.Component {
                 <div className="card-body">
                     <h5 className="card-title">{this.props.id}</h5>
                     <p className="card-text">{this.props.joke}</p>
-                    <p>{this.props.status}</p>
-                    {this.props.status === "notSaved" ? (
-                        <Link to="/favorites" onClick={this.handleAddFavorites} className="card-link btn btn-primary">
+                    {this.state.status !== "saved" ? (
+                        <Button variant="primary" onClick={this.handleAddFavorite}>
                             Add to favorites
-                        </Link>
-                    ) : null}
+                        </Button>
+                    ) : (
+                        <Button variant="warning" onClick={this.handleRemoveFavorite}>
+                            Remove from favorites
+                        </Button>
+                    )}
                 </div>
             </div>
         );

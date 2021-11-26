@@ -23,9 +23,9 @@ class Jokes extends React.Component {
                 <div className="jokes">
                     {this.state.jokes.map(j =>
                         JSON.parse(localStorage.getItem("favoriteJokes")).find(c => c.id === j.id) ? (
-                            <Joke id={j.id} joke={j.joke} status="saved" />
+                            <Joke id={j.id} key={j.id} joke={j.joke} status="saved" />
                         ) : (
-                            <Joke id={j.id} joke={j.joke} status="notSaved" />
+                            <Joke id={j.id} key={j.id} joke={j.joke} status="notSaved" />
                         )
                     )}
                 </div>
